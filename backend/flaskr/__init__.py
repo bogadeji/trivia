@@ -23,6 +23,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.app_context().push()
+    app.config.from_object('config')
     setup_db(app)
 
 
@@ -244,30 +245,21 @@ def create_app(test_config=None):
             category = body.get('quiz_category', None) 
             category_id = int(category['id'])
             previous_questions = body.get('previous_questions', None)
-            
-            
-            # if (len(previous_questions) == 0):
-            #     available_questions = Question.query.filter(Question.category == category_id)
-            #     # print(available_questions)
-            # else:
-            #     available_questions = Question.query.filter(~Question.id.in_(previous_questions))
-
-            # if category_id:
-            #     available_questions = available_questions.filter(Question.category == category_id)
-
-            
-           
-            
-            # question = available_questions.order_by(func.random()).first()
+        
             if category_id:
                 question = Question.query.filter(Question.category == str(category_id)).filter(~Question.id.in_(previous_questions)).order_by(func.random()).first()
             else:
                 question = Question.query.filter(~Question.id.in_(previous_questions)).order_by(func.random()).first()
             
+            if question is None:
+                final_question = None
+            else:
+                final_question = question.format()
+
             return jsonify({
                 "category": category_id,
                 "success": True,
-                "question": question.format()
+                "question": final_question
             })
         except:
             abort(422)
