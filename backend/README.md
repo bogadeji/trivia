@@ -71,7 +71,8 @@ One note before you delve into your tasks: for each endpoint, you are expected t
 
 You will need to provide detailed documentation of your API endpoints including the URL, request parameters, and the response body. Use the example below as a reference.
 
-### Documentation Example
+
+## API
 
 `GET '/api/v1.0/categories'`
 
@@ -81,12 +82,184 @@ You will need to provide detailed documentation of your API endpoints including 
 
 ```json
 {
-  "1": "Science",
-  "2": "Art",
-  "3": "Geography",
-  "4": "History",
-  "5": "Entertainment",
-  "6": "Sports"
+    "categories": {
+        "1": "Science",
+        "2": "Art",
+        "3": "Geography",
+        "4": "History",
+        "5": "Entertainment",
+        "6": "Sports"
+    },
+    "success": true,
+    "total_categories": 6
+}
+```
+
+
+`GET '/api/v1.0/questions'`
+
+- Fetches a dictionary of questions in which the keys are the ids and the value is the corresponding string of the category
+- Request Arguments: None
+- Returns: A a list of questions, number of total questions, current category, categories.
+
+```json
+{
+    "categories": {
+        "1": "Science",
+        "2": "Art",
+        "3": "Geography",
+        "4": "History",
+        "5": "Entertainment",
+        "6": "Sports"
+    },
+    "currentCategory": [],
+    "questions": [
+        {
+            "answer": "Apollo 13",
+            "category": 5,
+            "difficulty": 4,
+            "id": 2,
+            "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+        },
+        {
+            "answer": "Tom Cruise",
+            "category": 5,
+            "difficulty": 4,
+            "id": 4,
+            "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+        },
+        {
+            "answer": "Maya Angelou",
+            "category": 4,
+            "difficulty": 2,
+            "id": 5,
+            "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+        }
+    ],
+    "success": true,
+    "totalQuestions": 3
+}
+```
+
+`DELETE '/api/v1.0/questions/<int:question_id>'`
+
+- Deletes a question using a question ID
+- Request Arguments: None
+- Returns: An object with the id of the question deleted, and `true` if the question was succesfully deleted.
+
+```json
+{
+    "question_id": 2,
+    "success": true
+}
+```
+
+`POST '/api/v1.0/questions/'`
+
+- Creastes new questions
+- Request payload: A json object containing the `question and answer text, category, and difficulty score`
+- Returns: An object with the id of the question created, total number of questions in the database and `true` if the question was succesfully created.
+
+```json
+{
+    "question_id": 4,
+    "success": true,
+    "total_questions": 4
+}
+```
+
+`POST '/api/v1.0/questions/search'`
+
+- Fetches questions that match a search term
+- Request payload: `searchTerm`
+
+```json
+  {
+    "searchTerm": "clay"
+  }
+```
+- Returns: An object with a list of questions that match the search parameter, the total number of questions that match the search parameter and the total number of questions in the database.
+
+```json
+{
+    "questions": [
+        {
+            "answer": "Muhammad Ali",
+            "category": 4,
+            "difficulty": 1,
+            "id": 9,
+            "question": "What boxer's original name is Cassius Clay?"
+        }
+    ],
+    "success": true,
+    "total_questions": 20,
+    "total_search_questions": 1
+}
+```
+
+`GET '/categories/<int:category_id>/questions'`
+- Fetches a dictionary of questions based on category
+- Request Arguments: `category_id`
+- Returns: A a list of questions belonging to the specified the category, number of total questions in that category, number of total questions, current category, categories.
+
+```json
+{
+    "category": 1,
+    "questions": [
+        {
+            "answer": "The Liver",
+            "category": 1,
+            "difficulty": 4,
+            "id": 20,
+            "question": "What is the heaviest organ in the human body?"
+        },
+        {
+            "answer": "Alexander Fleming",
+            "category": 1,
+            "difficulty": 3,
+            "id": 21,
+            "question": "Who discovered penicillin?"
+        },
+        {
+            "answer": "Blood",
+            "category": 1,
+            "difficulty": 4,
+            "id": 22,
+            "question": "Hematology is a branch of medicine involving the study of what?"
+        }
+    ],
+    "total_category_questions": 3,
+    "total_questions": 13,
+    "success": true,
+}
+```
+
+`GET '/quizzes'`
+- Fetches a dictionary of questions to play the quiz, making sure it's not one of the previous questions
+- Request payload: Category (optional) and the list of ids of previous questions
+```json
+{
+    "previous_questions":[21],
+    "quiz_category":{
+        "type":"Science",
+        "id":"1"
+    }
+}
+```
+- Returns: A a list of questions, number of total questions, current category, categories.
+
+
+```json
+{
+    "category": 1,
+    "question": {
+        "answer": "The Liver",
+        "category": 1,
+        "difficulty": 4,
+        "id": 20,
+        "question": "What is the heaviest organ in the human body?"
+    },
+    "success": true
 }
 ```
 
